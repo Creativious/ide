@@ -1,4 +1,4 @@
-### Project Description
+# Project Description
 
 Open Source software to enchance and make game modding easier *hopefully*
 
