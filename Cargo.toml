@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "app_backend",
+    "app_gui"
+]
