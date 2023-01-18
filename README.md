@@ -1,4 +1,9 @@
+### Project Description
+
 Open Source software to enchance and make game modding easier *hopefully*
+
+
+## An Overview of Application Structure
 
 `app_backend` is for the backend portion of the application
 
