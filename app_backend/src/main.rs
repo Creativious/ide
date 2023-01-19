@@ -3,8 +3,8 @@
 #[allow(unused_variables)]
 #[allow(unused_imports)]
 
-mod modules;
-use modules::{config, config::Config};
+mod utils;
+use utils::datastorage::BackendData;
 #[tokio::main]
 async fn main() {
     let mut _backend_data: BackendData = BackendData::new();
@@ -20,17 +20,4 @@ async fn main() {
     // socket.write_all(&buffer[..bytes_read]).await.unwrap();
 
     
-}
-
-pub struct BackendData {
-    config: Config,
-}
-
-impl BackendData {
-
-    pub fn new() -> Self{
-        return BackendData {
-            config: Config::new(),
-        };
-    }
 }

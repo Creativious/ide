@@ -69,7 +69,3 @@ impl Config {
         };
     }
 }
-
-pub fn setup() -> Config{
-    return Config::new();
-}
