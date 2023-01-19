@@ -1,3 +1,6 @@
 [networking]
 backend_address = "localhost"
 backend_port = "3365"
+
+[networking.experimental]
+max_network_listeners = 1 # Max number of connections between backend and gui, more lets multiple guis exist. Highly experimental don't expect this to work, but some underlying support for it does exist. Creating extra listeners though isn't possible in the current state, this only exists for people compiling the source code. (Min: 1, Max: 10)

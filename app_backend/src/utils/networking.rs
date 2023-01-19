@@ -1,10 +1,11 @@
-#[allow(unused_must_use)]
-#[allow(dead_code)]
-#[allow(unused_variables)]
-pub mod config;
+
 
 use bytes::{BytesMut, BufMut};
 
-pub async fn _send_message(addr: String, port:i8, message:BytesMut) -> bool {
+pub async fn _send_message(addr: String, port:u16, message:BytesMut) -> bool {
     return true;
+}
+
+pub async fn _create_listener(addr: String, port:u16) -> bool {
+    return false;
 }
