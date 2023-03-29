@@ -30,7 +30,7 @@ impl Default for ConfigTomlNetworking {
             backend_address: Some("localhost".to_string()),
             backend_port: Some(3365),
             experimental: Some(ConfigTomlExperimentalNetworking::default()),
-    }
+        }
     }
 }
 
@@ -45,7 +45,6 @@ impl Default for ConfigToml {
     }
 }
 
-
 #[derive(Debug)]
 pub struct Config {
     pub backend_address: String,
@@ -55,37 +54,27 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Self {
+        let config_filepaths = ["app_config.toml"];
 
-        let config_filepaths: [&str; 1] = [
-            "app_config.toml"
-        ];
+        let content = config_filepaths.iter()
+            .filter_map(|path| fs::read_to_string(path).ok())
+            .next()
+            .unwrap_or_default();
 
-        let mut content: String = "".to_owned();
+        let config_toml: ConfigToml = toml::from_str(&content).unwrap_or_default();
 
-        for filepath in config_filepaths {
-            let result: Result<String, IoError> = fs::read_to_string(filepath);
+        let networking = config_toml.networking.unwrap_or_default();
 
-            if result.is_ok() {
-                content = result.unwrap();
-                break;
-            }
+        let backend_address = networking.backend_address.unwrap_or("localhost".to_string());
+        let backend_port = networking.backend_port.unwrap_or(3365);
+        let max_network_listeners = networking.experimental
+            .map_or(1, |experimental| experimental.max_network_listeners.unwrap_or(1));
+
+        Config {
+            backend_address,
+            backend_port,
+            max_network_listeners,
         }
-
-        let config_toml: ConfigToml = toml::from_str(&content).unwrap_or_else(|_| {return ConfigToml::default();});
-
-        let (backend_address, backend_port): (String, u16) = match &config_toml.networking {
-            Some(networking) => (networking.backend_address.clone().unwrap_or_else(|| {ConfigTomlNetworking::default().backend_address.unwrap()}), networking.backend_port.unwrap_or_else(|| {ConfigTomlNetworking::default().backend_port.unwrap()})),
-            None => (ConfigTomlNetworking::default().backend_address.unwrap(), ConfigTomlNetworking::default().backend_port.unwrap()),
-        };
-
-        let max_network_listeners: u8 = match &config_toml.networking.unwrap_or_default().experimental {
-            Some(experimental) => experimental.max_network_listeners.unwrap_or_else(|| ConfigTomlExperimentalNetworking::default().max_network_listeners.unwrap()),
-            None => ConfigTomlExperimentalNetworking::default().max_network_listeners.unwrap(),
-        };
-        return Config {
-            backend_address: backend_address,
-            backend_port: backend_port,
-            max_network_listeners: max_network_listeners,
-        };
     }
 }
+

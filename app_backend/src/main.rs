@@ -4,10 +4,28 @@
 #[allow(unused_imports)]
 
 mod utils;
+mod modules;
 use utils::datastorage::BackendData;
+use utils::networking::Networking;
+use uuid::Uuid;
+
+
+async fn gui_setup(networking: &mut Networking, backend_data: &BackendData) -> Uuid {
+    let listener_uuid = networking.create_listener(
+        backend_data.config.backend_address.clone(),
+        backend_data.config.backend_port,
+    );
+
+    listener_uuid
+}
+
+
 #[tokio::main]
 async fn main() {
-    let mut _backend_data: BackendData = BackendData::new();
+    let mut backend_data = BackendData::new();
+    let mut networking = Networking::new();
+
+    let listener_uuid = gui_setup(&mut networking, &backend_data).await;
 
     // @TODO: Add networking support
 
@@ -23,6 +41,4 @@ async fn main() {
     // let bytes_read = socket.read(&mut buffer).await.unwrap();
 
     // socket.write_all(&buffer[..bytes_read]).await.unwrap();
-
-    
 }
